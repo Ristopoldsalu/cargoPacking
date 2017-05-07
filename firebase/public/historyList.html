@@ -1,0 +1,19 @@
+<div ng-controller="historyController as $ctrl">
+    <div>
+        <div id='loadListitem' ng-repeat="load in loads | orderBy:'-date'">
+            <span style="font-size:20px; margin-left:10px;">
+                <label title="Koorma number" ng-model="load.number">{{load.number}}</label>
+                <label title="Kuupäev" ng-model="load.date">{{load.date}}</label>
+            </span>
+        </div>
+    </div>
+    <div>
+        <div id='packageTypeListitem' ng-repeat="load in loads | orderBy:'-date'">
+            <span style="font-size:20px; margin-left:10px;">
+                <label title="Koorma number" ng-model="load.number">{{load.number}}</label>
+                <label title="Kuupäev" ng-model="load.date">{{load.date}}</label>
+            </span>
+        </div>
+    </div>
+
+</div>
