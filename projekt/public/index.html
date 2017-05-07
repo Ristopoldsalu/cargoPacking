@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="stylesheet" type="text/css" href="style/modalStyle.css">
+    <script src = "scripts/Modernizr/modernizr-2.0.6.js"></script>
+
+    <script src = "scripts/jquery/jquery-1.11.0.min.js"></script>
+
+    <script src = "scripts/bootstrap.js"></script>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+
+
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+
+</head>
+<body ng-app="Myapp">
+<div ng-controller="myCtrl">
+
+<header>
+    <div class="tab">
+        <button class="tablinks" ng-click="openPage($event, 'packing')" id="defaultOpen">Packing</button>
+        <button class="tablinks" ng-click="openPage($event, 'ajalugu')">Ajalugu</button>
+        <button class="tablinks" ng-click="openPage($event, 'pakidsiht')">Pakid ja sihtkohad</button>
+    </div>
+</header>
+
+<div id ="packing" class="tabcontent">
+    <div ng-include src="'OOPDragging.html'"></div>
+</div>
+
+<div id="ajalugu" class="tabcontent">
+    <div ng-include src="'historyList.html'"></div>
+</div>
+
+<div id="pakidsiht" class="tabcontent">
+    <div ng-include src="'typeLocations.html'"></div>
+</div>
+
+<script src="scripts/app.js"></script>
+<script src="scripts/com/rectangleworld/display/SimpleSquareParticle.js"></script>
+<script src="scripts/models/Package.js"></script>
+<script src="scripts/models/Load.js"></script>
+<script src="scripts/models/PackageType.js"></script>
+<script src="scripts/models/Location.js"></script>
+<script src="scripts/models/PackageLoadDetail.js"></script>
+<script src="scripts/models/PackageGenerate.js"></script>
+<script src="scripts/services/PackageService.js"></script>
+<script src="scripts/services/LoadService.js"></script>
+<script src="scripts/services/PackageTypeService.js"></script>
+<script src="scripts/services/LocationService.js"></script>
+<script src="scripts/services/CanvasService.js"></script>
+<script src="scripts/services/PackageLoadDetailService.js"></script>
+<script src="scripts/controllers/mainController.js"></script>
+<script src="scripts/controllers/shapeController.js"></script>
+<script src="scripts/controllers/historyController.js"></script>
+<script src="scripts/controllers/packageLocationController.js"></script>
+</div>
+</body>
+</html>

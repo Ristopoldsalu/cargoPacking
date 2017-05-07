@@ -1,0 +1,1 @@
+mõõtmed - http://www.etslogistika.ee/teadmiseks/veokite-ja-haagiste-mahutavus/

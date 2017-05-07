@@ -1,0 +1,42 @@
+<div ng-controller="historyController as $ctrl">
+
+    <div id="loadsList">
+        <div id='loadListitem' ng-click="openLoad(load)" ng-repeat="load in loads">
+            <div id="loadMeta">
+            <label title="Koorma number" ng-model="load.number">Koorem Nr. {{load.number}}</label>
+            <label title="Kuupäev" ng-model="load.date">Kuupäev {{load.date}}</label>
+            </div>
+            <img id="imgaa" src="{{load.image}}">
+        </div>
+    </div>
+    <div id="loadModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeModal">&times;</span>
+                <h2>Nr. {{loadNumber}}</h2>
+                <h2>Kuupäev {{loadDate}}</h2>
+                <button id="loadToCanvas" ng-click="loadToCanvas()">Lae koorem</button>
+            </div>
+            <div class="modal-body">
+                <div id="packageDetailList">
+                    <ng-list id='packageDetailListItem' ng-repeat="packDetail in packageDetailsList | orderBy:'-packageType'">
+                        <span>
+                            <div id="packageDetailMeta">
+                            <label title="Paki tüüp" ng-model="packDetail.packageType">Paki tüüp: {{packDetail.packageType}}</label>
+                            <label title="Sihtkoht" ng-model="packDetail.destination">, Sihtkoht: {{packDetail.destination}}</label>
+                            <label title="Pakkide arv" ng-model="packDetail.count"> X {{packDetail.count}}</label>
+                            </div>
+                        </span>
+                    </ng-list>
+                </div>
+                <p><img src="" id="loadGraph"></p>
+            </div>
+            <div class="modal-footer">
+                <h3>Modal Footer</h3>
+            </div>
+        </div>
+
+    </div>
+
+</div>

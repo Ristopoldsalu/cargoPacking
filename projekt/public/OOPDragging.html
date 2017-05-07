@@ -1,0 +1,72 @@
+<div ng-controller="packingController as $ctrl">
+    <div id="addShape">
+        <!--
+        <select ng-click="" ng-model="selectedpack" ng-options="x.name for x in packageTypes" >
+            <option value="" disabled selected>Select pakk</option>
+        </select>
+        <select ng-click="" ng-model="selectedLocation" ng-options="x.name for x in locationsShape" >
+            <option value="" disabled selected>Select location</option>
+        </select>
+        <p ng-click="addShape()">add shape</p>
+        -->
+        <p ng-click="saveLoad()">Salvesta koorem</p>
+        <p ng-click="printImage()">Prindi koorem</p>
+        <p ng-click="addCar()">Lisa auto</p>
+        <p ng-click="removeCar()">Võta auto maha</p>
+        <p ng-click="openGeneration()">Lisa koormale pakid</p>
+    </div>
+    <div id="zooming">
+        <div ng-click="zoomIn()" id="zoomIn">
+            <p>zoom in</p>
+        </div>
+        <div ng-click="zoomOut()"id="zoomOut">
+            <p>zoom out</p>
+        </div>
+    </div>
+
+    <div style="top: 50px; text-align:center">
+        <canvas id="canvasOne" width="2000" height="1200" >
+            Your browser does not support HTML5 canvas.
+        </canvas>
+    </div>
+
+    <div id="generationModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Paki tüüp</td>
+                        <td>Sihtkoht</td>
+                        <td>Kogus</td>
+                    </tr>
+                    <tr ng-repeat="generativePack in generativePacks">
+                        <td>
+                            <select ng-model="generativePack.packageType" ng-options="x.name for x in packageTypes" >
+                                <option value="" disabled selected>Select pakk</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="selectedLocation{{generativePack.id}}" ng-model="generativePack.destination" ng-options="x.name for x in locationsShape" >
+                                <option value="" disabled selected>Select location</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input ng-model="generativePack.count" placeholder="Kogus">
+                        </td>
+                    </tr>
+                </table>
+                <button id="addNewPackRow" ng-click="addNewPackRow()">Lisa uus rida</button>
+            </div>
+            <div class="modal-footer">
+                <h3>Modal Footer</h3>
+                <button id="addPacksToCanvas" ng-click="addPacksToCanvas()">Aseta pakid koormale</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>

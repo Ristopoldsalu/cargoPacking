@@ -1,0 +1,69 @@
+<div ng-controller="packLocaController as $ctrl">
+    <p><button id="addPackageType">Lisa uus pakk</button></p>
+    <p><button id="addLocation">Lisa uus asukoht</button></p>
+
+
+
+    <div id="packageTypeList" class="typeList">
+        <h2>Pakkide tüübid</h2>
+        <div id='packageTypeListitem' ng-repeat="packageOne in packageTypes | orderBy:'-name'">
+                <span>
+                    <label title="Paki nimi">{{packageOne.name}}</label>
+                </span>
+                <button ng-click="editPackageType(packageOne)">Edit</button>
+                <button ng-click="deletePackageType(packageOne)">Kustuta</button>
+        </div>
+    </div>
+
+    <div id="locationsList" class="typeList">
+        <h2>Asukohad</h2>
+        <div id='locationsListItem' ng-repeat="location in locations | orderBy:'-name'">
+                <span>
+                    <label title="Asukoha nimi">{{location.name}}</label>
+                    <label title="Asukoha aadress">{{location.address}}</label>
+                </span>
+                <button ng-click="editLocation(location)">Edit</button>
+                <button ng-click="deleteLocation(location)">Kustuta</button>
+        </div>
+    </div>
+
+    <div id="packageTypeModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>{{packageText}}</h2>
+            </div>
+            <div class="modal-body">
+                <input id="packageTypeName" placeholder="Paki nimi" ng-model="packageTypeNameInput" title="Paki Nimi">
+                <input id="packageTypeHeight" placeholder="Kõrgus" ng-model="packageTypeHeightInput" title="Kõrgus">
+                <input id="packageTypeWidth" placeholder="Laius" ng-model="packageTypeWidthInput" title="Laius">
+                <input type="color" id="packageTypeColor" placeholder="Värvus" ng-model="packageTypeColorInput" title="Värvus">
+            </div>
+            <div class="modal-footer">
+                <h3>Modal Footer</h3>
+                <button ng-click="addPackageType()">Salvesta</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="locationModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>{{locationText}}</h2>
+            </div>
+            <div class="modal-body">
+                <input id="locationName" placeholder="Sihtkoha nimi" ng-model="locationNameInput" title="Sihtkoha Nimi">
+                <input id="locationAddress" placeholder="aadress" ng-model="locationAddressInput" title="Aadress">
+            </div>
+            <div class="modal-footer">
+                <h3>Modal Footer</h3>
+                <button ng-click="addLocation()">Salvesta</button>
+            </div>
+        </div>
+
+    </div>
+</div>
