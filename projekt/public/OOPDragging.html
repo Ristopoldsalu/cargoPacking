@@ -1,30 +1,25 @@
 <div ng-controller="packingController as $ctrl">
-    <div id="addShape">
-        <!--
-        <select ng-click="" ng-model="selectedpack" ng-options="x.name for x in packageTypes" >
-            <option value="" disabled selected>Select pakk</option>
-        </select>
-        <select ng-click="" ng-model="selectedLocation" ng-options="x.name for x in locationsShape" >
-            <option value="" disabled selected>Select location</option>
-        </select>
-        <p ng-click="addShape()">add shape</p>
-        -->
-        <p ng-click="saveLoad()">Salvesta koorem</p>
-        <p ng-click="printImage()">Prindi koorem</p>
-        <p ng-click="addCar()">Lisa auto</p>
-        <p ng-click="removeCar()">Võta auto maha</p>
-        <p ng-click="openGeneration()">Lisa koormale pakid</p>
+
+    <div id="menuDrop">
+        <div class="dropdown">
+            <button class="dropbtn">Menüü</button>
+            <div class="dropdown-content">
+                <a ng-click="openGeneration()">Lisa koormale pakid</a>
+                <a ng-click="addCar()">Lisa auto</a>
+                <a ng-click="removeCar()">Võta auto maha</a>
+                <a ng-click="saveLoad()">Salvesta koorem</a>
+                <a ng-click="printImage()">Prindi koorem</a>
+            </div>
+        </div>
     </div>
-    <div id="zooming">
-        <div ng-click="zoomIn()" id="zoomIn">
-            <p>zoom in</p>
-        </div>
-        <div ng-click="zoomOut()"id="zoomOut">
-            <p>zoom out</p>
-        </div>
+    <div ng-click="changeToLastCar()" id="lastCar">
+        <h2 class="glyphicon glyphicon-chevron-left"></h2>
+    </div>
+    <div ng-click="changeToNextCar()"id="nextCar">
+        <h2 class="glyphicon glyphicon-chevron-right"></h2>
     </div>
 
-    <div style="top: 50px; text-align:center">
+    <div id="canvasBox" style="top: 50px; text-align:center">
         <canvas id="canvasOne" width="2000" height="1200" >
             Your browser does not support HTML5 canvas.
         </canvas>
@@ -34,7 +29,7 @@
         <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
-                <span class="closeModal">&times;</span>
+                <span ng-click="closeModal()" class="closeModal">&times;</span>
             </div>
             <div class="modal-body">
                 <table>
@@ -43,15 +38,15 @@
                         <td>Sihtkoht</td>
                         <td>Kogus</td>
                     </tr>
-                    <tr ng-repeat="generativePack in generativePacks">
+                    <tr ng-repeat="generativePack in packsToGenerate">
                         <td>
                             <select ng-model="generativePack.packageType" ng-options="x.name for x in packageTypes" >
-                                <option value="" disabled selected>Select pakk</option>
+                                <option value="" disabled selected>Vali pakk</option>
                             </select>
                         </td>
                         <td>
                             <select id="selectedLocation{{generativePack.id}}" ng-model="generativePack.destination" ng-options="x.name for x in locationsShape" >
-                                <option value="" disabled selected>Select location</option>
+                                <option value="" disabled selected>Vali sihktoht</option>
                             </select>
                         </td>
                         <td>
@@ -59,12 +54,11 @@
                         </td>
                     </tr>
                 </table>
-                <button id="addNewPackRow" ng-click="addNewPackRow()">Lisa uus rida</button>
+                <span id="addNewPackRow" class="glyphicon glyphicon-plus" ng-click="addNewPackRow()"></span>
             </div>
             <div class="modal-footer">
                 <h3>Modal Footer</h3>
                 <button id="addPacksToCanvas" ng-click="addPacksToCanvas()">Aseta pakid koormale</button>
-
             </div>
         </div>
 

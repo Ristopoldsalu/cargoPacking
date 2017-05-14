@@ -1,6 +1,6 @@
 app.factory('Package', function (PackageType, Location) {
 
-    function Package(key, positionX, positionY, packageType, destination, load) {
+    function Package(key, positionX, positionY, packageType, destination, load, car) {
         this.x = positionX;
         this.y = positionY;
         this.packageType = packageType;
@@ -11,6 +11,7 @@ app.factory('Package', function (PackageType, Location) {
         this.accelY = 0;
         this.load = load;
         this.key = key;
+        this.car = car;
     }
 
     /**
@@ -24,7 +25,8 @@ app.factory('Package', function (PackageType, Location) {
             data.y,
             PackageType.build(data.packageType),
             Location.build(data.destination),
-            data.load
+            data.load,
+            data.car
         );
     };
 
@@ -42,6 +44,8 @@ app.factory('Package', function (PackageType, Location) {
 
 //A function for drawing the particle.
     Package.prototype.drawToContext = function(theContext, sizer) {
+        var pack = this;
+        var packageTy = this.packageType;
         theContext.fillStyle = this.packageType.color;
         //pakk
 
@@ -50,15 +54,21 @@ app.factory('Package', function (PackageType, Location) {
         //ruut risti jaoks
         theContext.fillRect(this.x+this.packageType.width/2*sizer-30, this.y - this.packageType.height/2*sizer, 30, 30);
         //rist
-        theContext.stroke();
 
+/*
+        base_image = new Image();
+        base_image.src = '/projekt/public/resources/images/deleteBin.jpg';
+        base_image.onload = function(){
+            theContext.drawImage(base_image, pack.x + packageTy.width/2*sizer-30, pack.y - pack.y - (packageTy.height/2*sizer), 10, 10);
+        };
+        */
 
         theContext.beginPath();
         theContext.moveTo(this.x+this.packageType.width/2*sizer-15 - 10, this.y-this.packageType.height/2*sizer+15 - 10);
         theContext.lineTo(this.x+this.packageType.width/2*sizer-15 + 10, this.y-this.packageType.height/2*sizer+15 + 10);
         theContext.moveTo(this.x+this.packageType.width/2*sizer-15 + 10, this.y-this.packageType.height/2*sizer+15 - 10);
         theContext.lineTo(this.x+this.packageType.width/2*sizer-15 - 10, this.y-this.packageType.height/2*sizer+15 + 10);
-        theContext.stroke();
+        theContext.closePath();
 
         //tekst
         theContext.fillStyle = '#000000';

@@ -1,23 +1,21 @@
-app.factory('LoadService', function ($firebaseObject, Load, PackageService, CanvasService) {
+app.factory('LoadService', function ($firebaseObject, Load, PackageService, CanvasService, ImageService) {
 
 
-    var rootRefLoca = firebase.database().ref().child('load');
     var currentLoad;
     var currentShapes = [];
     var loads = [];
 
+    var loadRef = firebase.database().ref().child('load');
+
 
     //getLoads
-    rootRefLoca.on('value', function (snapshot) {
-        if (snapshot.val() !== null) {
-            loads.length = 0;
-
-            angular.forEach(snapshot.val(), function (load, key) {
-                if(!loadExists(load)) {
-                    loads.push(Load.build(load, key));
-                }
-            });
-        }
+    loadRef.on('value', function (snapshot) {
+        loads.length = 0;
+        angular.forEach(snapshot.val(), function (load, key) {
+            var loadObejct = Load.build(load, key);
+            loads.push(loadObejct);
+            ImageService.getImages(loadObejct);
+        });
     });
 
     this.getLoads = function () {
@@ -27,24 +25,15 @@ app.factory('LoadService', function ($firebaseObject, Load, PackageService, Canv
     this.saveLoad = function (load) {
         var ref;
         if (load.key === null) {
-            ref = rootRefLoca.push();
+            ref = loadRef.push();
             load.key = ref.key;
         } else {
-            ref = rootRefLoca.child(load.key);
+            ref = loadRef.child(load.key);
         }
         var loadSave = angular.copy(load);//for object cleaning
         ref.set(loadSave);
         return true;
     };
-
-
-/*
-    ref.endAt().limit(1).on('child_added', function(snapshot) {
-
-        // all records after the last continue to invoke this function
-        console.log(snapshot.name(), snapshot.val());
-
-    });*/
 
     this.getCurrentLoad = function () {
         return currentLoad;
@@ -76,12 +65,16 @@ app.factory('LoadService', function ($firebaseObject, Load, PackageService, Canv
 
     this.getNextNumber = function () {
         var number = 0;
-        rootRefLoca.endAt().limit(1).on('child_added', function(snapshot) {
+        loadRef.endAt().limit(1).on('child_added', function(snapshot) {
             number = snapshot.number + 1;
         });
         return number;
     };
 
+    this.deleteLoad = function (load) {
+        var loadChild = loadRef.child(load.key).remove();
+        return true;
+    };
 
     return this;
 });

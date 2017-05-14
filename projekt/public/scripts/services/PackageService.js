@@ -69,6 +69,22 @@ app.factory('PackageService', function ($firebaseObject, $firebaseArray, Package
         return packageIds;
     };
 
+    this.deleteLoadPackages = function (loadNumber) {
+        var packages = rootRefLoca.orderByChild("load").equalTo(loadNumber);
+
+        var packagesObject = $firebaseArray(packages);
+        packagesObject.$loaded().then(function(){
+
+            angular.forEach(packagesObject,function (pack) {
+                deletePackage(pack.key);
+            });
+        });
+    };
+
+    deletePackage = function (key) {
+        rootRefLoca.child(key).remove();
+    };
+
     return this;
 
 

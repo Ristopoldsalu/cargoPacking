@@ -62,7 +62,7 @@ app.controller('packLocaController',function ($scope, PackageTypeService, Locati
         $scope.packageTypeWidthInput = packageOne.width;
         $scope.packageTypeColorInput = packageOne.color;
         $scope.packageText = packageOne.name;
-        packageModaxl.style.display = "block";
+        packageModal.style.display = "block";
     };
 
     $scope.deletePackageType = function (packageType) {

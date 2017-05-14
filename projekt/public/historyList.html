@@ -1,14 +1,27 @@
 <div ng-controller="historyController as $ctrl">
 
     <div id="loadsList">
-        <div id='loadListitem' ng-click="openLoad(load)" ng-repeat="load in loads">
-            <div id="loadMeta">
-            <label title="Koorma number" ng-model="load.number">Koorem Nr. {{load.number}}</label>
-            <label title="Kuupäev" ng-model="load.date">Kuupäev {{load.date}}</label>
-            </div>
-            <img id="imgaa" src="{{load.image}}">
-        </div>
-    </div>
+        <table class="table">
+            <tr>
+                <td>
+                    <label title="Koorma number" ng-model="load.number">Koorma Nr</label>
+                </td>
+                <td>
+                    <label title="Kuupäev" ng-model="load.date">Kuupäev</label>
+                </td>
+            </tr>
+            <tr  ng-repeat="load in loads">
+                <td ng-click="openLoad(load)">
+                    <label title="Koorma number" ng-model="load.number">Nr. {{load.number}}</label>
+                </td>
+                <td ng-click="openLoad(load)">
+                    <label title="Kuupäev" ng-model="load.date">{{load.date}}</label>
+                </td>
+                <td>
+                    <button ng-click="deleteLoad(load)" class="btn btn-default" data-popout="true" data-toggle="confirmation" data-singleton="true">Kustuta</button>
+                </td>
+            </tr>
+        </table>
     <div id="loadModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
@@ -20,23 +33,41 @@
             </div>
             <div class="modal-body">
                 <div id="packageDetailList">
-                    <ng-list id='packageDetailListItem' ng-repeat="packDetail in packageDetailsList | orderBy:'-packageType'">
-                        <span>
-                            <div id="packageDetailMeta">
-                            <label title="Paki tüüp" ng-model="packDetail.packageType">Paki tüüp: {{packDetail.packageType}}</label>
-                            <label title="Sihtkoht" ng-model="packDetail.destination">, Sihtkoht: {{packDetail.destination}}</label>
-                            <label title="Pakkide arv" ng-model="packDetail.count"> X {{packDetail.count}}</label>
-                            </div>
-                        </span>
-                    </ng-list>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <label title="Paki tüüp" ng-model="packDetail.packageType">Paki tüüp</label>
+                            </td>
+                            <td>
+                                <label title="Sihtkoht" ng-model="packDetail.destination">Sihtkoht</label>
+                            </td>
+                            <td>
+                                <label title="Pakkide arv" ng-model="packDetail.count"> Pakkide arv</label>
+                            </td>
+                        </tr>
+                        <tr id='packageDetailListItem' ng-repeat="packDetail in packageDetailsList | orderBy:'-packageType'">
+                            <td>
+                                <label title="Paki tüüp">{{packDetail.packageType}}</label>
+                            </td>
+                            <td>
+                                <label title="Sihtkoht">{{packDetail.destination}}</label>
+                            </td>
+                            <td>
+                                <label title="Pakkide arv">{{packDetail.count}}</label>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <p><img src="" id="loadGraph"></p>
+                <ng-list id="loadImages" ng-repeat="image in loadImages">
+                    <div id="loadOneImage">
+                        <p><img src="{{image.image}}" id="loadGraph"></p>
+                    </div>
+                </ng-list>
             </div>
             <div class="modal-footer">
                 <h3>Modal Footer</h3>
             </div>
         </div>
-
     </div>
-
+    </div>
 </div>

@@ -1,30 +1,61 @@
 <div ng-controller="packLocaController as $ctrl">
-    <p><button id="addPackageType">Lisa uus pakk</button></p>
-    <p><button id="addLocation">Lisa uus asukoht</button></p>
-
-
 
     <div id="packageTypeList" class="typeList">
-        <h2>Pakkide tüübid</h2>
-        <div id='packageTypeListitem' ng-repeat="packageOne in packageTypes | orderBy:'-name'">
-                <span>
+        <h2>Pakkide tüübid <span id="addPackageType" class="glyphicon glyphicon-plus"></span> </h2>
+        <table id="locationsTable" class="table">
+            <tr>
+                <td style="align-content: center">
+                    Paki nimetus
+                </td>
+                <td style="align-content: center">
+                    Mõõdud(kõrgus X laius)
+                </td>
+                <td style="align-content: center">
+                    Värvus
+                </td>
+            </tr>
+            <tr id='packageTypeListitem' ng-repeat="packageOne in packageTypes | orderBy:'-name'">
+                <td>
                     <label title="Paki nimi">{{packageOne.name}}</label>
-                </span>
-                <button ng-click="editPackageType(packageOne)">Edit</button>
-                <button ng-click="deletePackageType(packageOne)">Kustuta</button>
-        </div>
+                </td>
+                <td>
+                    <label title="Mõõdud">{{packageOne.height}} X {{packageOne.width}}</label>
+                </td>
+                <td style="background-color: {{packageOne.color}}">
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-edit" ng-click="editPackageType(packageOne)"></span>
+                    <span class="glyphicon glyphicon-remove-circle" ng-click="deletePackageType(packageOne)"></span>
+                </td>
+            </tr>
+        </table>
+
     </div>
 
     <div id="locationsList" class="typeList">
-        <h2>Asukohad</h2>
-        <div id='locationsListItem' ng-repeat="location in locations | orderBy:'-name'">
-                <span>
+        <h2>Asukohad <span id="addLocation" class="glyphicon glyphicon-plus"></span></h2>
+        <table class="table">
+            <tr>
+                <td style="align-content: center">
+                    Asukoha nimi
+                </td>
+                <td style="align-content: center">
+                    Aadress
+                </td>
+            </tr>
+            <tr id='locationsListItem' ng-repeat="location in locations | orderBy:'-name'">
+                <td>
                     <label title="Asukoha nimi">{{location.name}}</label>
+                </td>
+                <td>
                     <label title="Asukoha aadress">{{location.address}}</label>
-                </span>
-                <button ng-click="editLocation(location)">Edit</button>
-                <button ng-click="deleteLocation(location)">Kustuta</button>
-        </div>
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-edit" ng-click="editLocation(location)"></span>
+                    <span class="glyphicon glyphicon-remove-circle" ng-click="deleteLocation(location)"></span>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div id="packageTypeModal" class="modal">

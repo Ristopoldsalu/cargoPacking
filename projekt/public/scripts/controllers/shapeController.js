@@ -1,10 +1,14 @@
 app.controller('packingController',function ($scope, $firebaseObject, PackageTypeService,
-LocationService, Package, LoadService, Load, PackageService, CanvasService, PackageGenerate) {
+LocationService, Package, LoadService, Load, PackageService, CanvasService, PackageGenerate, Image, ImageService) {
 
     var shapes;
     var canvasWidth = 1000;
     var canvasHeight = 600;
     var canvasOne = $('#canvasOne');
+    var next = document.getElementById("nextCar");
+    var last = document.getElementById("lastCar");
+    next.style.display = 'none';
+    last.style.display = 'none';
 
 
     //getPackTypes
@@ -12,18 +16,27 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     //getLocations
     $scope.locationsShape = LocationService.getLocations();
 
-    $scope.generativePacks = [];
-    $scope.generativePacks.push(new PackageGenerate(null,null,1));
+    $scope.packsToGenerate = [];
+    $scope.packsToGenerate.push(new PackageGenerate(null,null,1));
 
     //initiate canvas
     $scope.onCanvasLoadTick = function() {
         if (('#canvasOne') !== null) {
-            //stop timer:
-            clearInterval($scope.loadTimer);
             CanvasService.canvasApp();
+            clearInterval($scope.loadTimer);
         }
+        console.log("INTERVAL STILL GOING")
+    };
+
+    $scope.onCanvasLoadTickLoad = function() {
+        if (CanvasService.getLoad() !== null) {
+            CanvasService.drawScreen();
+            clearInterval($scope.loadTimerLoad);
+        }
+        console.log("INTERVAL STILL GOINGLoad")
     };
     $scope.loadTimer = setInterval($scope.onCanvasLoadTick(), 1000/15);
+    $scope.loadTimerLoad = setInterval($scope.onCanvasLoadTickLoad(), 1000/15);
 
     //addOneShape
     $scope.addShape = function () {
@@ -33,10 +46,17 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     //saveLoad
     $scope.saveLoad = function () {
         var saveLoad = CanvasService.getLoad();
-        saveLoad.image = CanvasService.getCanvas().toDataURL("image/png");
+        saveLoad.image = null;
+        var images = [];
+        var i = 0;
+        for (i; i < saveLoad.cars; i++) {
+            var image = new Image(null, saveLoad.number, saveLoad.cars, CanvasService.getCanvas().toDataURL("image/png"));
+            images.push(image);
+        }
 
         if (LoadService.saveLoad(saveLoad)) {
-            var packageIds = PackageService.savePackages(CanvasService.getShapes());
+            ImageService.saveImages(images);
+            PackageService.savePackages(CanvasService.getShapes());
             alert("Salvestatud");
         }
     };
@@ -46,14 +66,20 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     };
 
     $scope.addCar = function () {
-        canvasOne.width(canvasOne.width + 400);
-        canvasOne.height(canvasOne.height + 400);
+        var next = document.getElementById("nextCar");
+        var last = document.getElementById("lastCar");
+        next.style.display = 'none';
+        last.style.display = 'block';
         CanvasService.addCar();
     };
 
     $scope.removeCar = function () {
-        canvasOne.width(canvasOne.width - 400);
-        canvasOne.height(canvasOne.height - 400);
+        //canvasOne.width(canvasOne.width - 400);
+        //canvasOne.height(canvasOne.height - 400);
+        var next = document.getElementById("nextCar");
+        var last = document.getElementById("lastCar");
+        next.style.display = 'none';
+        last.style.display = 'block';
         CanvasService.removeCar();
     };
 
@@ -86,20 +112,65 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     };
 
     $scope.addNewPackRow = function () {
-        $scope.generativePacks.push(new PackageGenerate(null,null,1));
-        console.log($scope.generativePacks);
+        $scope.packsToGenerate.push(new PackageGenerate(null,null,1));
+        console.log($scope.packsToGenerate);
     };
 
     $scope.addPacksToCanvas = function () {
-        angular.forEach($scope.generativePacks, function (generatePack) {
-            if (generatePack.packageType !== null && generatePack.destination !== null) {
+        var error = false;
+        angular.forEach($scope.packsToGenerate, function (generatePack) {
+            if (generatePack.packageType === null || generatePack.destination === null) {
+                error = true;
+
+            }
+        });
+        if (!error) {
+            angular.forEach($scope.packsToGenerate, function (generatePack) {
                 var i = 0;
                 for (i; i < generatePack.count; i++) {
                     CanvasService.makeOneShape(generatePack.packageType, generatePack.destination);
                 }
+            });
+            generationModal.style.display = "none";
+        } else {
+            alert("Palun vali kõik pakid");
+        }
+    };
+
+    $scope.changeToLastCar = function () {
+        var next = document.getElementById("nextCar");
+        var last = document.getElementById("lastCar");
+
+        if (CanvasService.getActiveCarsNumber() > 1) {
+            if (CanvasService.getActiveCarsNumber()-1 === 1) {
+                next.style.display = 'block';
+                last.style.display = 'none';
+            } else {
+                next.style.display = 'block';
+                last.style.display = 'block';
             }
-        });
-        generationModal.style.display = "none";
+            CanvasService.changeToLastCar();
+        }
+    };
+
+    $scope.changeToNextCar = function () {
+        var next = document.getElementById("nextCar");
+        var last = document.getElementById("lastCar");
+
+        if (CanvasService.getActiveCarsNumber() < CanvasService.getCarsNumber()) {
+            if (CanvasService.getActiveCarsNumber() === CanvasService.getCarsNumber() - 1) {
+                next.style.display = 'none';
+                last.style.display = 'block';
+            } else {
+                next.style.display = 'block';
+                last.style.display = 'block';
+            }
+            CanvasService.changeToNextCar();
+        }
+    };
+
+    $scope.closeModal = function () {
+        document.getElementById('generationModal').style.display = 'none';
     }
 });
 

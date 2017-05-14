@@ -1,4 +1,4 @@
-app.controller('myCtrl',function ($scope, $firebaseObject) {
+app.controller('myCtrl',function ($scope, $firebaseObject, CanvasService) {
 
     addEventListener('load', load, false);
     function load(){
@@ -18,7 +18,7 @@ app.controller('myCtrl',function ($scope, $firebaseObject) {
         }
 
         // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = $("tablinks");
+        tablinks = document.getElementsByClassName("tablinks");
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
@@ -26,6 +26,8 @@ app.controller('myCtrl',function ($scope, $firebaseObject) {
         // Show the current tab, and add an "active" class to the button that opened the tab
         document.getElementById(pageName).style.display = "block";
         $event.currentTarget.className += " active";
+        CanvasService.drawScreen();
+
     };
 
     var rootRef = firebase.database().ref().child('packagetype');

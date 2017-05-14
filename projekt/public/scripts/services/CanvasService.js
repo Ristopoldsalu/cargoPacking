@@ -3,7 +3,8 @@ app.service('CanvasService', function (Load, Package) {
     var shapes = [];
     var context;
     var theCanvas;
-    var sizer = 60;
+    var sizer = 130;
+
 
     var dragIndex;
     var dragging;
@@ -23,104 +24,57 @@ app.service('CanvasService', function (Load, Package) {
     var CAR_HEIGHT = 2.6;
     var CAR_WIDTH = 13.6;
     var cars = 1;
+    var activeCar = 1;
 
     this.drawScreen = function () {
+        if (context !== undefined) {
+            //bg
+            context.fillStyle = "#ECECEC";
+            context.fillRect(0,0,theCanvas.width,theCanvas.height);
+            context.fillStyle = "#000000";
+            var font = sizer/5;
+            context.font = font + "px Arial";
+            context.fillText('Auto : ' + activeCar, theCanvas.width/2 - 250,30);
+
+            if (load !== undefined) {
+                context.fillText('Nr. ' + load.number,theCanvas.width/-50, 30);
+                context.fillText('Kuupäev ' + load.date,theCanvas.width/2 + 200, 30);
+            } else {
+                context.fillText('Nr. ~',theCanvas.width/2, 30);
+                context.fillText('Kuupäev ~',theCanvas.width/2 + 200, 30);
+            }
+            drawCars();
+            this.drawShapes();
+        }
+    };
+
+    this.drawWithoutShapes = function () {
         //bg
         context.fillStyle = "#ECECEC";
         context.fillRect(0,0,theCanvas.width,theCanvas.height);
         context.fillStyle = "#000000";
-        context.stroke();
+        var font = sizer/5;
+        context.font = font + "px Arial";
+        context.fillText('Auto : ' + activeCar, 25,15);
         drawCars();
-
-        this.drawShapes();
     };
 
     drawCars = function () {
-        if (cars === 1) {
-            sizer = 130;
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-        } else if (cars === 2) {
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,900,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,900,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            /*
-            sizer = 95;
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,680,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.rect(450,395,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(450,920,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,680,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.fillRect(450,395,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(450,920,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            */
-        } else if (cars === 3) {
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,900,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,900,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,1300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,1300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            /*
-            sizer = 60;
-            context.fillStyle = "#000000";
-            context.rect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.rect(700,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(700,300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.rect(700,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillStyle = "#FFF6F6";
-            context.fillRect(20,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(20,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-
-            context.fillRect(700,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(700,300,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            context.fillRect(700,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
-            */
-        }
+        context.fillStyle = "#000000";
+        context.rect(theCanvas.width/2 - CAR_WIDTH*sizer/2,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
+        context.rect(theCanvas.width/2 - CAR_WIDTH*sizer/2,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
+        context.fillStyle = "#FFF6F6";
+        context.fillRect(theCanvas.width/2 - CAR_WIDTH*sizer/2,100,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
+        context.fillRect(theCanvas.width/2 - CAR_WIDTH*sizer/2,500,CAR_WIDTH*sizer,CAR_HEIGHT*sizer);
         context.stroke();
     };
 
     this.drawShapes = function() {
         var i = 0;
         angular.forEach(shapes, function (shape) {
-            shape.drawToContext(context,sizer);
+            if (shape.car === activeCar) {
+                shape.drawToContext(context,sizer);
+            }
         });
     };
 
@@ -136,7 +90,7 @@ app.service('CanvasService', function (Load, Package) {
     };
 
     this.makeOneShape = function(selectedPack, selectedLocation) {
-        tempShape = new Package(null, tempX+=10, tempY+=10, selectedPack, selectedLocation, load.number);
+        tempShape = new Package(null, tempX+=10, tempY+=10, selectedPack, selectedLocation, load.number, cars);
         shapes.splice(0,0,tempShape);
         console.log('uus shape');
         this.drawScreen();
@@ -237,6 +191,7 @@ app.service('CanvasService', function (Load, Package) {
         } else if (deleteShape) {
             curDown = false;
             shapes.splice(deleteIndex,1);
+            canvasService.drawWithoutShapes();
             canvasService.drawScreen();
         } else if (curDown){
             window.addEventListener("mousemove", canvasService.mouseMoveListener, false);
@@ -314,26 +269,30 @@ app.service('CanvasService', function (Load, Package) {
         //getLoads
         var number = 0;
         var loads = 0;
-        rootRefLoca.once('value', function(snapshot) {
+        rootRefLoca.orderByKey().once('value', function(snapshot) {
+            var loadNumber = 100;
             if (snapshot.hasChildren()) {
-                rootRefLoca.endAt().limitToFirst(1).on('child_added', function(snapshot) {
-                    load = new Load(null, snapshot.val().number+1,1,new Date().toLocaleDateString(),[]);
+                angular.forEach(snapshot.val(), function (load) {
+                    loadNumber = load.number+1;
                 });
-            } else {
-                load = new Load(null, 100,1,new Date().toLocaleDateString(),[]);
             }
+            load = new Load(null, loadNumber,1,new Date().toLocaleDateString(), []);
         });
     };
 
     this.addCar = function () {
         if (cars < 4) {
             cars = cars +1;
+            load.cars = cars;
+            activeCar = cars;
         }
         this.drawScreen();
     };
     this.removeCar = function () {
         if (cars > 1) {
             cars = cars - 1;
+            load.cars = cars;
+            activeCar = cars;
         }
         this.drawScreen();
     };
@@ -352,5 +311,24 @@ app.service('CanvasService', function (Load, Package) {
 
     this.getShapes = function () {
         return shapes;
-    }
+    };
+
+    this.getActiveCarsNumber = function() {
+        return activeCar;
+    };
+
+    this.getCarsNumber = function() {
+        return cars;
+    };
+
+
+    this.changeToNextCar = function () {
+        activeCar++;
+        this.drawScreen();
+    };
+
+    this.changeToLastCar = function () {
+        activeCar--;
+        this.drawScreen();
+    };
 });

@@ -1,17 +1,19 @@
-app.controller('historyController',function ($scope, LoadService, CanvasService, $timeout, PackageLoadDetailService) {
+app.controller('historyController',function ($scope, LoadService, CanvasService, $timeout, PackageLoadDetailService, PackageService, ImageService) {
 
     $scope.loads = LoadService.getLoads();
+
     $scope.loadNumber = 0;
     $scope.loadDate = "";
     var loadDetail = {};
-
+    $scope.loadImages = [];
 
     $scope.openLoad = function (load) {
         loadModal.style.display = "block";
         $scope.loadNumber = load.number;
         $scope.loadDate = load.date;
         loadDetail = load;
-        document.getElementById("loadGraph").src = load.image;
+        $scope.loadImages = load.image;
+        //document.getElementById("loadGraph").src = load.image.image;
 
         getPackageCounts();
 
@@ -42,8 +44,16 @@ app.controller('historyController',function ($scope, LoadService, CanvasService,
         loadModal.style.display = "none";
     };
 
-    window.onclick = function(event) {
+    $scope.deleteLoad = function (load) {
 
-    };
+        if (LoadService.deleteLoad(load)) {
+            PackageService.deleteLoadPackages(load.number);
+            ImageService.deleteLoadImages(load.number);
+            alert("Kustutatud!");
+        }
+
+    }
+
+
 
 });
