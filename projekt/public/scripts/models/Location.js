@@ -1,8 +1,9 @@
 app.factory('Location', function () {
 
-    function Location(name, address) {
+    function Location(name, address, color) {
         this.name = name;
         this.address = address;
+        this.color = color;
     }
 
     Location.prototype.getSomethongsomething = function () {
@@ -15,7 +16,8 @@ app.factory('Location', function () {
     Location.build = function (data) {
         return new Location(
             data.name,
-            data.address
+            data.address,
+            data.color
         );
     };
 

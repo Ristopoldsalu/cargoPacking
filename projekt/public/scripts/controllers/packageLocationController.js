@@ -84,6 +84,7 @@ app.controller('packLocaController',function ($scope, PackageTypeService, Locati
     $scope.editLocation = function (location) {
         $scope.locationNameInput = location.name;
         $scope.locationAddressInput = location.address;
+        $scope.locationColorInput = location.color;
         locationModal.style.display = "block";
     };
 
@@ -92,12 +93,13 @@ app.controller('packLocaController',function ($scope, PackageTypeService, Locati
     };
 
     $scope.addLocation = function () {
-        var location = new Location($scope.locationNameInput, $scope.locationAddressInput);
+        var location = new Location($scope.locationNameInput, $scope.locationAddressInput, $scope.locationColorInput);
         LocationService.addLocation(location);
 
         locationModal.style.display = "none";
         $scope.locationNameInput = null;
         $scope.locationAddressInput = null;
+        $scope.locationColorInput = "#000000";
     };
 
 

@@ -42,6 +42,9 @@
                 <td style="align-content: center">
                     Aadress
                 </td>
+                <td style="align-content: center">
+                    Värvus
+                </td>
             </tr>
             <tr id='locationsListItem' ng-repeat="location in locations | orderBy:'-name'">
                 <td>
@@ -49,6 +52,8 @@
                 </td>
                 <td>
                     <label title="Asukoha aadress">{{location.address}}</label>
+                </td>
+                <td style="background-color: {{location.color}}">
                 </td>
                 <td>
                     <span class="glyphicon glyphicon-edit" ng-click="editLocation(location)"></span>
@@ -66,13 +71,22 @@
                 <h2>{{packageText}}</h2>
             </div>
             <div class="modal-body">
-                <input id="packageTypeName" placeholder="Paki nimi" ng-model="packageTypeNameInput" title="Paki Nimi">
-                <input id="packageTypeHeight" placeholder="Kõrgus" ng-model="packageTypeHeightInput" title="Kõrgus">
-                <input id="packageTypeWidth" placeholder="Laius" ng-model="packageTypeWidthInput" title="Laius">
-                <input type="color" id="packageTypeColor" placeholder="Värvus" ng-model="packageTypeColorInput" title="Värvus">
+                <table class="table">
+                    <tr>
+                        <td>Paki nimi</td>
+                        <td>Kõrgus</td>
+                        <td>Laius</td>
+                        <td>Värvus</td>
+                    </tr>
+                    <tr>
+                        <td><input id="packageTypeName" placeholder="Paki nimi" ng-model="packageTypeNameInput" title="Paki Nimi"></td>
+                        <td><input id="packageTypeHeight" placeholder="Kõrgus" ng-model="packageTypeHeightInput" title="Kõrgus"></td>
+                        <td><input id="packageTypeWidth" placeholder="Laius" ng-model="packageTypeWidthInput" title="Laius"></td>
+                        <td><input type="color" id="packageTypeColor" placeholder="Värvus" ng-model="packageTypeColorInput" title="Värvus"></td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
-                <h3>Modal Footer</h3>
                 <button ng-click="addPackageType()">Salvesta</button>
             </div>
         </div>
@@ -87,14 +101,22 @@
                 <h2>{{locationText}}</h2>
             </div>
             <div class="modal-body">
-                <input id="locationName" placeholder="Sihtkoha nimi" ng-model="locationNameInput" title="Sihtkoha Nimi">
-                <input id="locationAddress" placeholder="aadress" ng-model="locationAddressInput" title="Aadress">
+                <table class="table">
+                    <tr>
+                        <td>Sihtkoha nimi</td>
+                        <td>Aadress</td>
+                        <td>Värvus</td>
+                    </tr>
+                    <tr>
+                        <td><input id="locationName" placeholder="Sihtkoha nimi" ng-model="locationNameInput" title="Sihtkoha Nimi"></td>
+                        <td><input id="locationAddress" placeholder="aadress" ng-model="locationAddressInput" title="Aadress"></td>
+                        <td><input type="color" id="locationColor" placeholder="Värvus" ng-model="locationColorInput" title="Värvus"></td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
-                <h3>Modal Footer</h3>
                 <button ng-click="addLocation()">Salvesta</button>
             </div>
         </div>
-
     </div>
 </div>

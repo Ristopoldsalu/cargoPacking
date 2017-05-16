@@ -51,8 +51,11 @@ app.controller('historyController',function ($scope, LoadService, CanvasService,
             ImageService.deleteLoadImages(load.number);
             alert("Kustutatud!");
         }
+    };
 
-    }
+    $scope.printImage = function (image) {
+        window.open().location = image.image;
+    };
 
 
 

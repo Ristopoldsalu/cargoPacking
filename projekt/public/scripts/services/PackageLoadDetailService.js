@@ -14,21 +14,38 @@ app.factory('PackageLoadDetailService', function ($firebaseObject, $firebaseArra
         packagesObject.$loaded().then(function(){
             angular.forEach(packagesObject, function (packageOne) {
                 var exists = false;
-                if (packageDetailsList.length !== 0) {
-                    angular.forEach(packageDetailsList, function (detail) {
-                        if (detail.packageType === packageOne.packageType.name && detail.destination === packageOne.destination.name) {
-                            detail.addCount();
-                            exists = true;
-                        }
-                    });
-                }
+                angular.forEach(packageDetailsList, function (detail) {
+                    if (detail.packageType === packageOne.packageType.name && detail.destination === packageOne.destination.name
+                        && detail.car === packageOne.car) {
+                        detail.addCount();
+                        exists = true;
+                    }
+                });
                 if (!exists) {
-                    packageDetailsList.push(new PackageLoadDetail(packageOne.packageType.name, packageOne.destination.name));
+                    packageDetailsList.push(new PackageLoadDetail(packageOne.packageType.name, packageOne.destination.name, packageOne.car));
                 }
             })
         });
 
         return packageDetailsList;
+    };
+
+    this.getDetailList = function (shapes) {
+        var details = [];
+        angular.forEach(shapes, function (packageOne) {
+            var exists = false;
+            angular.forEach(details, function (detail) {
+                if (detail.packageType === packageOne.packageType.name && detail.destination === packageOne.destination.name
+                    && detail.car === packageOne.car) {
+                    detail.addCount();
+                    exists = true;
+                }
+            });
+            if (!exists) {
+                details.push(new PackageLoadDetail(packageOne.packageType.name, packageOne.destination.name, packageOne.car));
+            }
+        });
+        return details;
     };
 
     return this;

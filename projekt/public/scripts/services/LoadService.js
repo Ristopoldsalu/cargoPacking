@@ -43,6 +43,7 @@ app.factory('LoadService', function ($firebaseObject, Load, PackageService, Canv
         currentLoad = currLoad;
         CanvasService.setLoad(currLoad);
         PackageService.getPackages(currLoad.number);
+        CanvasService.getPacksDetail();
         CanvasService.drawScreen();
     };
 

@@ -1,4 +1,4 @@
-app.service('CanvasService', function (Load, Package) {
+app.service('CanvasService', function (Load, Package, PackageLoadDetailService) {
 
     var shapes = [];
     var context;
@@ -25,6 +25,7 @@ app.service('CanvasService', function (Load, Package) {
     var CAR_WIDTH = 13.6;
     var cars = 1;
     var activeCar = 1;
+    var packsDetail = [];
 
     this.drawScreen = function () {
         if (context !== undefined) {
@@ -34,22 +35,26 @@ app.service('CanvasService', function (Load, Package) {
             context.fillStyle = "#000000";
             var font = sizer/5;
             context.font = font + "px Arial";
-            context.fillText('Auto : ' + activeCar, theCanvas.width/2 - 250,30);
+            context.fillText('Auto : ' + activeCar + "/" + cars, theCanvas.width/2 - 250,30);
 
             if (load !== undefined) {
-                context.fillText('Nr. ' + load.number,theCanvas.width/-50, 30);
+                context.fillText('Nr. ' + load.number,theCanvas.width/2-50, 30);
                 context.fillText('Kuupäev ' + load.date,theCanvas.width/2 + 200, 30);
             } else {
-                context.fillText('Nr. ~',theCanvas.width/2, 30);
+                context.fillText('Nr. ~',theCanvas.width/2-50, 30);
                 context.fillText('Kuupäev ~',theCanvas.width/2 + 200, 30);
             }
+
+
             drawCars();
+            drawPackDetails();
             this.drawShapes();
         }
     };
 
     this.drawWithoutShapes = function () {
         //bg
+        context.clearRect(0, 0, theCanvas.width, theCanvas.height);
         context.fillStyle = "#ECECEC";
         context.fillRect(0,0,theCanvas.width,theCanvas.height);
         context.fillStyle = "#000000";
@@ -69,8 +74,21 @@ app.service('CanvasService', function (Load, Package) {
         context.stroke();
     };
 
+    drawPackDetails = function () {
+        context.fillStyle = "#000000";
+        var font = sizer/5;
+        context.font = font + "px Arial";
+        var startX = 25;
+        var startY = 900;
+        angular.forEach(packsDetail, function (pack) {
+            if (pack.car === activeCar) {
+                context.fillText(pack.packageType + " - " + pack.destination + " X " + pack.count, startX,startY);
+                startY = startY + 30;
+            }
+        });
+    };
+
     this.drawShapes = function() {
-        var i = 0;
         angular.forEach(shapes, function (shape) {
             if (shape.car === activeCar) {
                 shape.drawToContext(context,sizer);
@@ -91,9 +109,14 @@ app.service('CanvasService', function (Load, Package) {
 
     this.makeOneShape = function(selectedPack, selectedLocation) {
         tempShape = new Package(null, tempX+=10, tempY+=10, selectedPack, selectedLocation, load.number, cars);
-        shapes.splice(0,0,tempShape);
+        shapes.push(tempShape);
         console.log('uus shape');
+        this.getPacksDetail();
         this.drawScreen();
+    };
+
+    this.getPacksDetail = function () {
+        packsDetail = PackageLoadDetailService.getDetailList(shapes);
     };
 
     this.canvasApp = function() {
@@ -110,13 +133,14 @@ app.service('CanvasService', function (Load, Package) {
     };
 
     this.mouseMoveListener = function(evt) {
+        var factor = 1000;
         if (dragging) {
             var posX;
             var posY;
-            var minX = shapes[shapes.length-1].packageType.width/2*sizer;
-            var maxX = theCanvas.width - shapes[shapes.length-1].packageType.width/2*sizer;
-            var minY = shapes[shapes.length-1].packageType.height/2*sizer;
-            var maxY = theCanvas.height - shapes[shapes.length-1].packageType.height/2*sizer;
+            var minX = shapes[shapes.length-1].packageType.width/factor/2*sizer;
+            var maxX = theCanvas.width - shapes[shapes.length-1].packageType.width/factor/2*sizer;
+            var minY = shapes[shapes.length-1].packageType.height/factor/2*sizer;
+            var maxY = theCanvas.height - shapes[shapes.length-1].packageType.height/factor/2*sizer;
 
             //getting mouse position correctly
             var bRect = theCanvas.getBoundingClientRect();
@@ -192,6 +216,7 @@ app.service('CanvasService', function (Load, Package) {
             curDown = false;
             shapes.splice(deleteIndex,1);
             canvasService.drawWithoutShapes();
+            packsDetail = PackageLoadDetailService.getDetailList(shapes);
             canvasService.drawScreen();
         } else if (curDown){
             window.addEventListener("mousemove", canvasService.mouseMoveListener, false);
@@ -254,7 +279,7 @@ app.service('CanvasService', function (Load, Package) {
         easeAmount = 0.45;
 
         //initiate Load
-        initiateLoad();
+        this.initiateLoad();
 
         this.drawScreen();
 
@@ -264,13 +289,10 @@ app.service('CanvasService', function (Load, Package) {
 
     };
 
-    initiateLoad = function () {
+    this.initiateLoad = function () {
         var rootRefLoca = firebase.database().ref().child('load');
         //getLoads
-        var number = 0;
-        var loads = 0;
         rootRefLoca.orderByKey().once('value', function(snapshot) {
-            var loadNumber = 100;
             if (snapshot.hasChildren()) {
                 angular.forEach(snapshot.val(), function (load) {
                     loadNumber = load.number+1;
@@ -315,6 +337,10 @@ app.service('CanvasService', function (Load, Package) {
 
     this.getActiveCarsNumber = function() {
         return activeCar;
+    };
+
+    this.setActiveCarsNumber = function(number) {
+        activeCar = number;
     };
 
     this.getCarsNumber = function() {

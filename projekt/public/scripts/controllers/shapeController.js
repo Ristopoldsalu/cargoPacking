@@ -48,11 +48,17 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
         var saveLoad = CanvasService.getLoad();
         saveLoad.image = null;
         var images = [];
-        var i = 0;
-        for (i; i < saveLoad.cars; i++) {
-            var image = new Image(null, saveLoad.number, saveLoad.cars, CanvasService.getCanvas().toDataURL("image/png"));
+        var i = 1;
+        var activeCar = CanvasService.getActiveCarsNumber();
+
+        for (i; i < saveLoad.cars+1; i++) {
+            CanvasService.setActiveCarsNumber(i);
+            CanvasService.drawScreen();
+            var image = new Image(null, saveLoad.number, i, CanvasService.getCanvas().toDataURL("image/png"));
             images.push(image);
         }
+        CanvasService.setActiveCarsNumber(activeCar);
+        CanvasService.drawScreen();
 
         if (LoadService.saveLoad(saveLoad)) {
             ImageService.saveImages(images);
@@ -61,41 +67,43 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
         }
     };
 
+    $scope.saveAsNewLoad = function () {
+        if (CanvasService.getLoad().key !== null) {
+            CanvasService.initiateLoad();
+            var load = null;
+            var load = CanvasService.getLoad();
+            var check = function () {
+                if (load !== null || load !== undefined) {
+                    angular.forEach(shapes, function (shape) {
+                        shape.load = load.number;
+                        shape.key = null;
+                    })
+                }
+                else {
+                    setTimeout(check, 500);
+                }
+            };
+            check();
+        }
+        CanvasService.saveLoad();
+    };
+
     $scope.printImage = function () {
         window.open().location = CanvasService.getCanvas().toDataURL("image/png");
     };
 
     $scope.addCar = function () {
-        var next = document.getElementById("nextCar");
-        var last = document.getElementById("lastCar");
         next.style.display = 'none';
         last.style.display = 'block';
         CanvasService.addCar();
     };
 
     $scope.removeCar = function () {
-        //canvasOne.width(canvasOne.width - 400);
-        //canvasOne.height(canvasOne.height - 400);
-        var next = document.getElementById("nextCar");
-        var last = document.getElementById("lastCar");
         next.style.display = 'none';
         last.style.display = 'block';
         CanvasService.removeCar();
     };
 
-    //ZOOMING
-    $scope.zoomIn = function() {
-        canvasWidth = canvasWidth + 100;
-        canvasHeight = canvasHeight + 100;
-        canvasOne.width(canvasWidth);
-        canvasOne.height(canvasHeight);
-    };
-    $scope.zoomOut = function () {
-        canvasWidth = canvasWidth - 100;
-        canvasHeight = canvasHeight - 100;
-        canvasOne.width(canvasWidth);
-        canvasOne.height(canvasHeight);
-    };
 
 //For debug messages
     var Debugger = function() { };
@@ -138,9 +146,6 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     };
 
     $scope.changeToLastCar = function () {
-        var next = document.getElementById("nextCar");
-        var last = document.getElementById("lastCar");
-
         if (CanvasService.getActiveCarsNumber() > 1) {
             if (CanvasService.getActiveCarsNumber()-1 === 1) {
                 next.style.display = 'block';
@@ -154,9 +159,6 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     };
 
     $scope.changeToNextCar = function () {
-        var next = document.getElementById("nextCar");
-        var last = document.getElementById("lastCar");
-
         if (CanvasService.getActiveCarsNumber() < CanvasService.getCarsNumber()) {
             if (CanvasService.getActiveCarsNumber() === CanvasService.getCarsNumber() - 1) {
                 next.style.display = 'none';
@@ -171,6 +173,16 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
 
     $scope.closeModal = function () {
         document.getElementById('generationModal').style.display = 'none';
+    };
+
+    $scope.removeGenerateRow = function (generatePackage) {
+        var i = 0;
+        for(i; i < $scope.packsToGenerate.length;i++){
+            if (generatePackage.id === $scope.packsToGenerate[i].id) {
+                $scope.packsToGenerate.splice(i,1);
+                break;
+            }
+        }
     }
 });
 
