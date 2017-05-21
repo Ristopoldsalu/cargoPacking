@@ -36,5 +36,4 @@ app.controller('myCtrl',function ($scope, $firebaseObject, CanvasService) {
     console.log(syncObject.name);
     syncObject.$bindTo($scope, "data");
 
-
 });

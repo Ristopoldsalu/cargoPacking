@@ -108,7 +108,7 @@ app.service('CanvasService', function (Load, Package, PackageLoadDetailService) 
     };
 
     this.makeOneShape = function(selectedPack, selectedLocation) {
-        tempShape = new Package(null, tempX+=10, tempY+=10, selectedPack, selectedLocation, load.number, cars);
+        tempShape = new Package(null, tempX+=10, tempY+=10, selectedPack, selectedLocation, load.number, activeCar);
         shapes.push(tempShape);
         console.log('uus shape');
         this.getPacksDetail();
@@ -298,7 +298,7 @@ app.service('CanvasService', function (Load, Package, PackageLoadDetailService) 
                     loadNumber = load.number+1;
                 });
             }
-            load = new Load(null, loadNumber,1,new Date().toLocaleDateString(), []);
+            load = new Load(null, loadNumber,1,new Date().toLocaleDateString(), [], []);
         });
     };
 
@@ -311,12 +311,21 @@ app.service('CanvasService', function (Load, Package, PackageLoadDetailService) 
         this.drawScreen();
     };
     this.removeCar = function () {
-        if (cars > 1) {
+        if (confirm("Oled sa kindel, et soovid auto kustutada?(Kaovad ka auto peal olevad pakid)")) {
+            for(var i = shapes.length -1; i >= 0 ; i--) {
+                if (shapes[i].car === activeCar) {
+                    shapes.splice(i, 1);
+                } else if (shapes[i].car > activeCar) {
+                    shapes[i].car = shapes[i].car-1;
+                }
+            }
+            if (activeCar === cars) {
+                activeCar = cars-1;
+            }
             cars = cars - 1;
             load.cars = cars;
-            activeCar = cars;
+            this.drawScreen();
         }
-        this.drawScreen();
     };
 
     this.getCanvas = function () {
@@ -345,6 +354,10 @@ app.service('CanvasService', function (Load, Package, PackageLoadDetailService) 
 
     this.getCarsNumber = function() {
         return cars;
+    };
+
+    this.setCarsNumber = function(carsNumber) {
+        cars = carsNumber;
     };
 
 

@@ -1,11 +1,12 @@
 app.factory('Load', function () {
 
-    function Load(key, number, cars, date, image) {
+    function Load(key, number, cars, date, image, packages) {
         this.number = number;
         this.cars = cars;
         this.date = date;
         this.image = image;
         this.key = key;
+        this.packages = packages;
     }
 
     Load.build = function (data) {
@@ -14,7 +15,8 @@ app.factory('Load', function () {
             data.number,
             data.cars,
             data.date,
-            data.image
+            data.image,
+            data.packages
         );
     };
 

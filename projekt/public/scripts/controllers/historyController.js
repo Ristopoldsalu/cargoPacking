@@ -14,7 +14,12 @@ app.controller('historyController',function ($scope, LoadService, CanvasService,
         loadDetail = load;
         $scope.loadImages = load.image;
         //document.getElementById("loadGraph").src = load.image.image;
-
+        if (load.cars > 1){
+            document.getElementById("nextCar").style.display = 'block';
+        } else {
+            document.getElementById("nextCar").style.display = 'none';
+            document.getElementById("lastCar").style.display = 'none';
+        }
         getPackageCounts();
 
     };
@@ -26,6 +31,10 @@ app.controller('historyController',function ($scope, LoadService, CanvasService,
     $scope.loadToCanvas = function () {
         loadModal.style.display = "none";
         LoadService.setCurrentLoad(loadDetail);
+        CanvasService.setLoad(loadDetail);
+        CanvasService.setCarsNumber(loadDetail.cars);
+        CanvasService.getPacksDetail();
+        CanvasService.drawScreen();
         clickOnUpload();
     };
 

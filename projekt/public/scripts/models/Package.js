@@ -35,9 +35,13 @@ app.factory('Package', function (PackageType, Location) {
      */
 
 //The function below returns a Boolean value representing whether the point with the coordinates supplied "hits" the particle.
-    Package.prototype.hitTest = function(hitX,hitY, sizer) {
-        var factor = 2000;
-        return((hitX > this.x - this.packageType.width/factor*sizer)&&(hitX < this.x + this.packageType.width/factor*sizer)&&(hitY > this.y - this.packageType.height/factor*sizer)&&(hitY < this.y + this.packageType.height/factor*sizer));
+    Package.prototype.hitTest = function(hitX,hitY, proportions) {
+        var pack = this.packageType;
+        var mFactor = 2*1000;
+        return((hitX > this.x - pack.width/mFactor*proportions)
+            &&(hitX < this.x + pack.width/mFactor*proportions)
+            &&(hitY > this.y - pack.height/mFactor*proportions)
+            &&(hitY < this.y + pack.height/mFactor*proportions));
     };
     Package.prototype.hitDeleteTest = function(hitX,hitY, sizer) {
         var factor = 2000;
@@ -45,54 +49,46 @@ app.factory('Package', function (PackageType, Location) {
     };
 
 //A function for drawing the particle.
-    Package.prototype.drawToContext = function(theContext, sizer) {
+    Package.prototype.drawToContext = function(theContext, proportions) {
         var factor = 1000;
-        var pack = this;
-        var packageTy = this.packageType;
+        var pack = this.packageType;
         theContext.fillStyle = this.packageType.color;
         //pakk
         theContext.fillStyle = "#000000";
-        theContext.rect(this.x - (this.packageType.width/factor/2*sizer),
-                            this.y - (this.packageType.height/factor/2*sizer),
-                            (this.packageType.width/factor*sizer),
-                            (this.packageType.height/factor*sizer));
+        theContext.rect(this.x - (pack.width/factor/2*proportions),
+                            this.y - (pack.height/factor/2*proportions),
+                            (pack.width/factor*proportions),
+                            (pack.height/factor*proportions));
         theContext.stroke();
-        theContext.fillStyle = this.packageType.color;
-        theContext.fillRect(this.x - (this.packageType.width/factor/2*sizer)+1,
-                            this.y - (this.packageType.height/factor/2*sizer)+1,
-                            (this.packageType.width/factor*sizer)-1,
-                            (this.packageType.height/factor*sizer)-1);
-
+        theContext.fillStyle = pack.color;
+        theContext.fillRect(this.x - (pack.width/factor/2*proportions)+1,
+                            this.y - (pack.height/factor/2*proportions)+1,
+                            (pack.width/factor*proportions)-1,
+                            (pack.height/factor*proportions)-1);
+        //sihtkoht
         theContext.fillStyle = this.destination.color;
-        theContext.fillRect(this.x + (this.packageType.width/factor/4*sizer),
-                            this.y - (this.packageType.height/factor/2*sizer)+1,
-                            (this.packageType.width/factor/4*sizer)-1,
-                            (this.packageType.height/factor*sizer)-1);
-        /*
-        theContext.fillStyle = "#000000";
-        //ruut risti jaoks
-        theContext.fillRect(this.x+this.packageType.width/factor/2*sizer-30, this.y - this.packageType.height/factor/2*sizer, 30, 30);
-        //rist
-        */
-
+        theContext.fillRect(this.x + (pack.width/factor/4*proportions),
+                            this.y - (pack.height/factor/2*proportions)+1,
+                            (pack.width/factor/4*proportions)-1,
+                            (pack.height/factor*proportions)-1);
 
         theContext.beginPath();
-        theContext.moveTo(this.x+this.packageType.width/factor/2*sizer-15 - 10, this.y-this.packageType.height/factor/2*sizer+15 - 10);
-        theContext.lineTo(this.x+this.packageType.width/factor/2*sizer-15 + 10, this.y-this.packageType.height/factor/2*sizer+15 + 10);
-        theContext.moveTo(this.x+this.packageType.width/factor/2*sizer-15 + 10, this.y-this.packageType.height/factor/2*sizer+15 - 10);
-        theContext.lineTo(this.x+this.packageType.width/factor/2*sizer-15 - 10, this.y-this.packageType.height/factor/2*sizer+15 + 10);
+        theContext.moveTo(this.x+pack.width/factor/2*proportions-15 - 10, this.y-pack.height/factor/2*proportions+15 - 10);
+        theContext.lineTo(this.x+pack.width/factor/2*proportions-15 + 10, this.y-pack.height/factor/2*proportions+15 + 10);
+        theContext.moveTo(this.x+pack.width/factor/2*proportions-15 + 10, this.y-pack.height/factor/2*proportions+15 - 10);
+        theContext.lineTo(this.x+pack.width/factor/2*proportions-15 - 10, this.y-pack.height/factor/2*proportions+15 + 10);
         theContext.closePath();
 
         //tekst
-        var textSizer = sizer;
+        var textSizer = proportions;
         var textFits = false;
         theContext.fillStyle = '#000000';
         var font = textSizer/5;
 
-        var packTypeTxt = this.packageType.name;
+        var packTypeTxt = pack.name;
         var destTxt = ' -> ' +  this.destination.name;
-        var sizeTxt = this.packageType.height + " X " + this.packageType.width;
-
+        var sizeTxt = pack.height + " X " + pack.width;
+        //FIT TEXT
         while(!textFits) {
             theContext.font = font + "px Arial";
             var typeTxtLength = theContext.measureText(packTypeTxt);
@@ -100,16 +96,16 @@ app.factory('Package', function (PackageType, Location) {
             var sizeTxtLength = theContext.measureText(sizeTxt);
             var height = typeTxtLength.height + destTxtLength.height + 10;
             var width = typeTxtLength.width+40+sizeTxt.width >  destTxtLength.width+15 ? typeTxtLength.width: destTxtLength.width;
-            if (this.packageType.width/factor*sizer > width) {
+            if (pack.width/factor*proportions > width) {
                 textFits = true;
-                theContext.fillText(packTypeTxt, this.x-this.packageType.width/factor/2*sizer+10, this.y);
-                if (this.x-this.packageType.width/factor/2*sizer+10+sizeTxt.width+20 > this.packageType.width/factor*sizer) {
-                    theContext.fillText(sizeTxt, this.x-this.packageType.width/factor/2*sizer+10, this.y + 25);
-                    theContext.fillText(destTxt, this.x-this.packageType.width/factor/2*sizer +10, this.y + 50);
+                theContext.fillText(packTypeTxt, this.x-pack.width/factor/2*proportions+10, this.y);
+                if (this.x-pack.width/factor/2*proportions+10+sizeTxt.width+20 > pack.width/factor*proportions) {
+                    theContext.fillText(sizeTxt, this.x-pack.width/factor/2*proportions+10, this.y + 25);
+                    theContext.fillText(destTxt, this.x-pack.width/factor/2*proportions +10, this.y + 50);
 
                 } else {
-                    theContext.fillText(sizeTxt, this.x-this.packageType.width/factor/2*sizer+30+typeTxtLength.width, this.y);
-                    theContext.fillText(destTxt, this.x-this.packageType.width/factor/2*sizer+10, this.y + 25);
+                    theContext.fillText(sizeTxt, this.x-pack.width/factor/2*proportions+30+typeTxtLength.width, this.y);
+                    theContext.fillText(destTxt, this.x-pack.width/factor/2*proportions+10, this.y + 25);
 
                 }
             } else {

@@ -33,6 +33,13 @@ a {
     right: 10px;
 }
 
+#deleteCar {
+    position: fixed;
+    top: 60px;
+    right: 200px;
+    font-size: 40px;
+}
+
 /* Style the tab */
 div.tab {
     overflow: hidden;
@@ -85,7 +92,7 @@ div.tab button.active {
 }
 
 .typeList {
-    background-color: #cccccc;
+    background-color: #f9f9f9;
 }
 #imgaa {
     width: 100px;
@@ -102,14 +109,14 @@ div.tab button.active {
 }
 
 #loadGraph {
-    width:200px;
-    height:200px;
+    width:250px;
+    height:250px;
 }
 #loadModal {
      position: absolute !important;
  }
 #imageBox {
-    height:250px;
+    height:270px;
 }
 
 a.menu:after, .dropdown-toggle:after {
@@ -118,7 +125,7 @@ a.menu:after, .dropdown-toggle:after {
 
 /* Dropdown Button */
 .dropbtn {
-    background-color: #4CAF50;
+    background-color: #77aeff;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -161,7 +168,7 @@ a.menu:after, .dropdown-toggle:after {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-    background-color: #3e8e41;
+    background-color: #77aeff;
 }
 
 table, td{

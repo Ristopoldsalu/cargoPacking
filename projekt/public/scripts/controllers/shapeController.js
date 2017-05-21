@@ -7,17 +7,28 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     var canvasOne = $('#canvasOne');
     var next = document.getElementById("nextCar");
     var last = document.getElementById("lastCar");
-    next.style.display = 'none';
-    last.style.display = 'none';
+    var deleteCar = document.getElementById("deleteCar");
+    deleteCar.style.display = 'none';
 
 
+    $scope.checkArrows = function () {
+        if (CanvasService.getActiveCarsNumber() === 1) {
+            last.style.display = 'none';
+        } else {
+            last.style.display = 'block';
+        }
+        if (CanvasService.getActiveCarsNumber() === CanvasService.getCarsNumber()) {
+            next.style.display = 'none';
+        } else {
+            next.style.display = 'block';
+        }
+    };
     //getPackTypes
     $scope.packageTypes = PackageTypeService.getPackageTypes();
     //getLocations
     $scope.locationsShape = LocationService.getLocations();
 
-    $scope.packsToGenerate = [];
-    $scope.packsToGenerate.push(new PackageGenerate(null,null,1));
+    $scope.packsToGenerate = [new PackageGenerate(null,null,1)];
 
     //initiate canvas
     $scope.onCanvasLoadTick = function() {
@@ -46,20 +57,42 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     //saveLoad
     $scope.saveLoad = function () {
         var saveLoad = CanvasService.getLoad();
-        saveLoad.image = null;
-        var images = [];
+        var images = angular.copy(saveLoad.image);
         var i = 1;
+        var b = 1;
         var activeCar = CanvasService.getActiveCarsNumber();
 
-        for (i; i < saveLoad.cars+1; i++) {
+        if (images === null || images === undefined) {
+            images = [];
+        }
+        for (i; i <= saveLoad.cars; i++) {
             CanvasService.setActiveCarsNumber(i);
             CanvasService.drawScreen();
-            var image = new Image(null, saveLoad.number, i, CanvasService.getCanvas().toDataURL("image/png"));
-            images.push(image);
+            var foundImage = false;
+            for (b; b < images.length; b++) {
+                if (images[b].car === activeCar) {
+                    images[b].image = CanvasService.getCanvas().toDataURL("image/png");
+                    foundImage = true;
+                }
+            }
+            if (!foundImage){
+                var image = new Image(null, saveLoad.number, i, CanvasService.getCanvas().toDataURL("image/png"));
+                images.push(image);
+            }
         }
         CanvasService.setActiveCarsNumber(activeCar);
         CanvasService.drawScreen();
 
+        if (saveLoad.packages === undefined || saveLoad.packages === null) {
+            saveLoad.packages = [];
+        } else {
+            saveLoad.packages.length = 0;
+        }
+        angular.forEach(CanvasService.getShapes(), function (package) {
+            saveLoad.packages.push(package.key);
+        });
+
+        saveLoad.image = null;
         if (LoadService.saveLoad(saveLoad)) {
             ImageService.saveImages(images);
             PackageService.savePackages(CanvasService.getShapes());
@@ -74,7 +107,7 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
             var load = CanvasService.getLoad();
             var check = function () {
                 if (load !== null || load !== undefined) {
-                    angular.forEach(shapes, function (shape) {
+                    angular.forEach(CanvasService.getShapes(), function (shape) {
                         shape.load = load.number;
                         shape.key = null;
                     })
@@ -85,7 +118,7 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
             };
             check();
         }
-        CanvasService.saveLoad();
+        $scope.saveLoad();
     };
 
     $scope.printImage = function () {
@@ -93,15 +126,17 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
     };
 
     $scope.addCar = function () {
-        next.style.display = 'none';
-        last.style.display = 'block';
+        deleteCar.style.display = 'block';
         CanvasService.addCar();
+        $scope.checkArrows();
     };
 
     $scope.removeCar = function () {
-        next.style.display = 'none';
-        last.style.display = 'block';
         CanvasService.removeCar();
+        $scope.checkArrows();
+        if (CanvasService.getCarsNumber() === 1) {
+            deleteCar.style.display = 'none';
+        }
     };
 
 
@@ -139,6 +174,8 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
                     CanvasService.makeOneShape(generatePack.packageType, generatePack.destination);
                 }
             });
+            $scope.packsToGenerate.length = 0;
+            $scope.packsToGenerate.push(new PackageGenerate(null, null, 1))
             generationModal.style.display = "none";
         } else {
             alert("Palun vali kõik pakid");
@@ -147,27 +184,15 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
 
     $scope.changeToLastCar = function () {
         if (CanvasService.getActiveCarsNumber() > 1) {
-            if (CanvasService.getActiveCarsNumber()-1 === 1) {
-                next.style.display = 'block';
-                last.style.display = 'none';
-            } else {
-                next.style.display = 'block';
-                last.style.display = 'block';
-            }
             CanvasService.changeToLastCar();
+            $scope.checkArrows();
         }
     };
 
     $scope.changeToNextCar = function () {
         if (CanvasService.getActiveCarsNumber() < CanvasService.getCarsNumber()) {
-            if (CanvasService.getActiveCarsNumber() === CanvasService.getCarsNumber() - 1) {
-                next.style.display = 'none';
-                last.style.display = 'block';
-            } else {
-                next.style.display = 'block';
-                last.style.display = 'block';
-            }
             CanvasService.changeToNextCar();
+            $scope.checkArrows();
         }
     };
 
@@ -183,6 +208,9 @@ LocationService, Package, LoadService, Load, PackageService, CanvasService, Pack
                 break;
             }
         }
-    }
+    };
+
+    $scope.checkArrows();
+
 });
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/.idea" />
+        <option value="$PROJECT_DIR$/functions" />
+        <option value="$PROJECT_DIR$/public/scripts/angular" />
+        <option value="$PROJECT_DIR$/public/scripts/js" />
+        <option value="$PROJECT_DIR$/public/scripts/Modernizr" />
+        <option value="$PROJECT_DIR$/public/style/css" />
+      </list>
+    </option>
+  </component>
+</project>

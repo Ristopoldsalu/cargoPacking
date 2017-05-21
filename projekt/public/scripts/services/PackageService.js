@@ -27,6 +27,7 @@ app.factory('PackageService', function ($firebaseObject, $firebaseArray, Package
                 packs.push(Package.build(pack));
             });
             CanvasService.setShapes(packs);
+            CanvasService.getPacksDetail();
             CanvasService.drawScreen();
         });
 
